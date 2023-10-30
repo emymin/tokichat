@@ -41,6 +41,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(index))
+        .route("/font",get(font))
         .route("/websocket", get(websocket_handler))
         .with_state(app_state);
 
@@ -149,4 +150,8 @@ fn check_username(state: &AppState, string: &mut String, name: &str) {
 // Include utf-8 file at **compile** time.
 async fn index() -> Html<&'static str> {
     Html(std::include_str!("../chat.html"))
+}
+
+async fn font() -> Vec<u8>{ 
+    std::include_bytes!("../linja-pona-4.9.otf").to_vec()
 }
