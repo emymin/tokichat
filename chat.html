@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Toki</title>
+        <link rel="stylesheet" href="https://emymin.net/assets/tokipona.css">
+        <style>
+            * {
+                font-family: inherit;
+                font-size: 1em;
+            }
+            h1 {
+                font-size: 50px;
+                text-align: center;
+            }
+            .name{
+                display: flex;
+                padding: 10px;
+                justify-content: center;
+                height:30px;
+            }
+            #chat{
+                width: 100%;
+                height:500px;
+                box-sizing: border-box;
+                font-size: 25px;
+            }
+            #input{
+                width: 100%;
+                height:30px;
+                font-size: 25px;
+                box-sizing: border-box;
+            }
+        </style>
+    </head>
+    <body class="tokipona">
+        <h1>toki!</h1>
+
+        <div class="name">
+            <input id="username" style="display:block; width:100px; box-sizing: border-box" type="text" placeholder="sina nimi seme">
+            <button id="join-chat" type="button">sina li kama toki</button>
+        </div>
+        <textarea id="chat" readonly></textarea>
+        <input id="input" type="text" disabled placeholder="toki">
+
+        <script>
+            const username = document.querySelector("#username");
+            const join_btn = document.querySelector("#join-chat");
+            const textarea = document.querySelector("#chat");
+            const input = document.querySelector("#input");
+
+            function url(s) {
+                var l = window.location;
+                return ((l.protocol === "https:") ? "wss://" : "ws://") + l.hostname + (((l.port != 80) && (l.port != 443)) ? ":" + l.port : "") + l.pathname + s;
+            }
+
+            join_btn.addEventListener("click", function(e) {
+                this.disabled = true;
+                username.disabled=true;
+
+                const websocket = new WebSocket(url("websocket"));
+
+                websocket.onopen = function() {
+                    console.log("connection opened");
+                    websocket.send(username.value);
+                    input.disabled=false;
+                }
+
+                const btn = this;
+
+                websocket.onclose = function() {
+                    console.log("connection closed");
+                    btn.disabled = false;
+                }
+
+                websocket.onmessage = function(e) {
+                    console.log("received message: "+e.data);
+                    textarea.value += e.data+"\r\n";
+                }
+
+                input.onkeydown = function(e) {
+                    if (e.key == "Enter") {
+                        websocket.send(input.value);
+                        input.value = "";
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
