@@ -41,7 +41,7 @@
 
         <div class="name">
             <input id="username" style="display:block; width:100px; box-sizing: border-box" type="text" placeholder="sina nimi seme">
-            <button id="join-chat" type="button">sina li kama toki</button>
+            <button id="join-chat" type="button">sina li kama e toki</button>
         </div>
         <textarea id="chat" readonly></textarea>
         <input id="input" type="text" disabled placeholder="toki">
@@ -64,7 +64,7 @@
                 const websocket = new WebSocket(url("websocket"));
 
                 websocket.onopen = function() {
-                    console.log("connection opened");
+                    console.log("sina li kulupu e kama");
                     websocket.send(username.value);
                     input.disabled=false;
                 }
@@ -72,12 +72,12 @@
                 const btn = this;
 
                 websocket.onclose = function() {
-                    console.log("connection closed");
+                    console.log("sina li kulupu e tawa");
                     btn.disabled = false;
                 }
 
                 websocket.onmessage = function(e) {
-                    console.log("received message: "+e.data);
+                    console.log("toki li kama: "+e.data);
                     textarea.value += e.data+"\r\n";
                 }
 

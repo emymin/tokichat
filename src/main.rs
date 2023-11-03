@@ -28,7 +28,7 @@ async fn main() {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "example_chat=trace".into()),
+                .unwrap_or_else(|_| "tokichat=trace".into()),
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
@@ -81,7 +81,7 @@ async fn websocket(stream: WebSocket, state: Arc<AppState>) {
             } else {
                 // Only send our client that username is taken.
                 let _ = sender
-                    .send(Message::Text(String::from("ale li kepeken e nimi")))
+                    .send(Message::Text(String::from("jan ante li kepeken e nimi")))
                     .await;
 
                 return;
@@ -94,7 +94,7 @@ async fn websocket(stream: WebSocket, state: Arc<AppState>) {
     let mut rx = state.tx.subscribe();
 
     // Now send the "joined" message to all subscribers.
-    let msg = format!("{} li kama.", username);
+    let msg = format!("jan {} li kama.", username);
     tracing::debug!("{}", msg);
     let _ = state.tx.send(msg);
 
@@ -129,7 +129,7 @@ async fn websocket(stream: WebSocket, state: Arc<AppState>) {
     };
 
     // Send "user left" message (similar to "joined" above).
-    let msg = format!("{} li tawa.", username);
+    let msg = format!("jan {} li tawa.", username);
     tracing::debug!("{}", msg);
     let _ = state.tx.send(msg);
 
